@@ -40,7 +40,9 @@ class LearningPathSteps(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     path_id = db.Column(db.Integer, db.ForeignKey("lp_paths.id", ondelete="CASCADE"))
-    challenge_id = db.Column(db.Integer, db.ForeignKey("challenges.id", ondelete="CASCADE"))
+    challenge_id = db.Column(
+        db.Integer, db.ForeignKey("challenges.id", ondelete="CASCADE")
+    )
     position = db.Column(db.Integer, nullable=False, default=0)
     note = db.Column(db.String(256))
 

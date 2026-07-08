@@ -22,9 +22,11 @@ team_finder_bp = Blueprint(
 
 @team_finder_bp.route("/team-finder")
 def team_finder_list():
-    posts = TeamFinderPosts.query.filter_by(status="open").order_by(
-        TeamFinderPosts.created_at.desc()
-    ).all()
+    posts = (
+        TeamFinderPosts.query.filter_by(status="open")
+        .order_by(TeamFinderPosts.created_at.desc())
+        .all()
+    )
     return render_template("platform_plus/team_finder_list.html", posts=posts)
 
 
@@ -59,7 +61,9 @@ def team_finder_interested(post_id):
         flash("This is your own post.", "info")
         return redirect(url_for("team_finder.team_finder_list"))
 
-    existing = TeamFinderInterests.query.filter_by(post_id=post.id, user_id=user.id).first()
+    existing = TeamFinderInterests.query.filter_by(
+        post_id=post.id, user_id=user.id
+    ).first()
     if not existing:
         interest = TeamFinderInterests(
             post_id=post.id, user_id=user.id, note=request.form.get("note", "")

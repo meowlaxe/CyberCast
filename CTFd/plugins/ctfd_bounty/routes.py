@@ -24,9 +24,11 @@ bounty_bp = Blueprint(
 
 @bounty_bp.route("/bounty")
 def bounty_list():
-    programs = BountyPrograms.query.filter_by(status="active").order_by(
-        BountyPrograms.created_at.desc()
-    ).all()
+    programs = (
+        BountyPrograms.query.filter_by(status="active")
+        .order_by(BountyPrograms.created_at.desc())
+        .all()
+    )
     return render_template("platform_plus/bounty_list.html", programs=programs)
 
 
@@ -56,8 +58,11 @@ def bounty_submit(program_id):
 
     user = get_current_user()
     submission = BountySubmissions(
-        program_id=program.id, user_id=user.id, title=title,
-        description=description, severity=severity,
+        program_id=program.id,
+        user_id=user.id,
+        title=title,
+        description=description,
+        severity=severity,
     )
     db.session.add(submission)
     db.session.commit()
@@ -75,14 +80,18 @@ def bounty_my_submissions():
         .order_by(BountySubmissions.submitted_at.desc())
         .all()
     )
-    return render_template("platform_plus/bounty_my_submissions.html", submissions=submissions)
+    return render_template(
+        "platform_plus/bounty_my_submissions.html", submissions=submissions
+    )
 
 
 @bounty_bp.route("/admin/bounty")
 @admins_only
 def admin_bounty_dashboard():
     programs = BountyPrograms.query.order_by(BountyPrograms.created_at.desc()).all()
-    return render_template("platform_plus/admin_bounty_dashboard.html", programs=programs)
+    return render_template(
+        "platform_plus/admin_bounty_dashboard.html", programs=programs
+    )
 
 
 @bounty_bp.route("/admin/bounty/new", methods=["GET", "POST"])
@@ -108,12 +117,16 @@ def admin_bounty_new():
     return redirect(url_for("bounty.admin_bounty_dashboard"))
 
 
-@bounty_bp.route("/admin/bounty/submissions/<int:submission_id>/update", methods=["POST"])
+@bounty_bp.route(
+    "/admin/bounty/submissions/<int:submission_id>/update", methods=["POST"]
+)
 @admins_only
 def admin_bounty_update_submission(submission_id):
     submission = BountySubmissions.query.get_or_404(submission_id)
     submission.status = request.form.get("status", submission.status)
-    submission.reward_amount = int(request.form.get("reward_amount") or submission.reward_amount)
+    submission.reward_amount = int(
+        request.form.get("reward_amount") or submission.reward_amount
+    )
     submission.admin_notes = request.form.get("admin_notes", submission.admin_notes)
     submission.updated_at = datetime.datetime.utcnow()
     db.session.commit()

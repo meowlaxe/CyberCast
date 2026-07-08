@@ -15,7 +15,9 @@ class Organizations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False, unique=True)
     slug = db.Column(db.String(128), nullable=False, unique=True)
-    org_type = db.Column(db.String(32), default="university")  # university | company | community
+    org_type = db.Column(
+        db.String(32), default="university"
+    )  # university | company | community
     description = db.Column(db.Text)
     website = db.Column(db.String(256))
     logo_url = db.Column(db.String(256))

@@ -37,12 +37,16 @@ class BountySubmissions(db.Model):
     __tablename__ = "bnt_submissions"
 
     id = db.Column(db.Integer, primary_key=True)
-    program_id = db.Column(db.Integer, db.ForeignKey("bnt_programs.id", ondelete="CASCADE"))
+    program_id = db.Column(
+        db.Integer, db.ForeignKey("bnt_programs.id", ondelete="CASCADE")
+    )
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="SET NULL"))
     title = db.Column(db.String(256), nullable=False)
     description = db.Column(db.Text, nullable=False)
     severity = db.Column(db.String(16), default="medium")  # low|medium|high|critical
-    status = db.Column(db.String(16), default="pending")   # pending|triaging|accepted|duplicate|rejected|paid
+    status = db.Column(
+        db.String(16), default="pending"
+    )  # pending|triaging|accepted|duplicate|rejected|paid
     reward_amount = db.Column(db.Integer, default=0)
     admin_notes = db.Column(db.Text)
     submitted_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)

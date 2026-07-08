@@ -23,7 +23,9 @@ def load(app):
     app.db.create_all()
     app.register_blueprint(learning_paths_bp)
 
-    register_plugin_assets_directory(app, base_path="/plugins/ctfd_learning_paths/static/")
+    register_plugin_assets_directory(
+        app, base_path="/plugins/ctfd_learning_paths/static/"
+    )
     register_plugin_script("/plugins/ctfd_learning_paths/static/js/nav.js")
     register_admin_plugin_menu_bar(
         title="Learning Paths", route="/plugins/platform-plus/admin/learning-paths"

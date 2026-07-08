@@ -29,7 +29,9 @@ def slugify(value: str) -> str:
 
 @organizations_bp.route("/organizations")
 def organizations_list():
-    orgs = Organizations.query.order_by(Organizations.verified.desc(), Organizations.name.asc()).all()
+    orgs = Organizations.query.order_by(
+        Organizations.verified.desc(), Organizations.name.asc()
+    ).all()
     return render_template("platform_plus/organizations_list.html", organizations=orgs)
 
 
@@ -55,13 +57,19 @@ def organizations_new():
 
     user = get_current_user()
     org = Organizations(
-        name=name, slug=slug, org_type=org_type,
-        description=description, website=website, owner_id=user.id,
+        name=name,
+        slug=slug,
+        org_type=org_type,
+        description=description,
+        website=website,
+        owner_id=user.id,
     )
     db.session.add(org)
     db.session.flush()
 
-    membership = OrganizationMembers(organization_id=org.id, user_id=user.id, role="owner")
+    membership = OrganizationMembers(
+        organization_id=org.id, user_id=user.id, role="owner"
+    )
     db.session.add(membership)
     db.session.commit()
 
@@ -78,7 +86,9 @@ def organization_detail(slug):
         .filter(OrganizationMembers.organization_id == org.id)
         .all()
     )
-    return render_template("platform_plus/organization_detail.html", org=org, members=members)
+    return render_template(
+        "platform_plus/organization_detail.html", org=org, members=members
+    )
 
 
 @organizations_bp.route("/organizations/<slug>/join", methods=["POST"])
@@ -94,7 +104,9 @@ def organization_join(slug):
         flash("You are already a member of this organization.", "info")
         return redirect(url_for("organizations.organization_detail", slug=slug))
 
-    membership = OrganizationMembers(organization_id=org.id, user_id=user.id, role="member")
+    membership = OrganizationMembers(
+        organization_id=org.id, user_id=user.id, role="member"
+    )
     db.session.add(membership)
     db.session.commit()
     flash("Successfully joined the organization.", "success")
